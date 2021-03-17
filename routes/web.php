@@ -13,6 +13,14 @@ use App\Http\Controllers\FornecedorController;
 |
 */
 
-Route::get('/', [FornecedorController::class, 'fetchAll']);
+//rota para atualização de página - preenche a tabela
+Route::get('/', [FornecedorController::class, 'fetchAll'])->name('preenche_lista');
 
+//rota para envio de dados do novo fornecedor
 Route::post('/submit', [FornecedorController::class, 'store'])->name('registrar_fornecedor');
+
+//rota exclusão
+Route::post('/excluir/{id}', [FornecedorController::class, 'destroy'])->name('excluir_fornecedor');
+
+//rota detalhes
+Route::get('/detalhes/{id}', [FornecedorController::class, 'showDetails'])->name('detalhes_fornecedor');

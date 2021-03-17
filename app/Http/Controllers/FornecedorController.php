@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Fornecedor;
 
+
+//funções que salvam e preenchem a tabela
 class FornecedorController extends Controller
 {
+    public $providersList;
 
+    //salva os dados do fornecedor
     public function store(Request $request)
     {
         Fornecedor::create([
@@ -24,12 +28,13 @@ class FornecedorController extends Controller
             'observacao' => $request->observacao,
         ]);
 
-        return $this->fetchAll();
+        return redirect('/');
     }
 
+    //função que preenche a tabela
     public function fetchAll()
     {
-        $providersList = Fornecedor::get();
+        $providersList = Fornecedor::get(); //função get de dentro da classe fornecedor - informações do banco de dados
 
         $itemsByPage = 99;
         $pageNumber = 0;
@@ -55,12 +60,32 @@ class FornecedorController extends Controller
                 $data .= '<td style="width:9%">' . $providersList[$pageNumber * $itemsByPage + $i]->razaoSocial . '</td>';
                 $data .= '<td style="width:9%">' . $providersList[$pageNumber * $itemsByPage + $i]->cnpj . '</td>';
                 $data .= '<td style="width:9%">' . $providersList[$pageNumber * $itemsByPage + $i]->telefone . '</td>';
-                $data .= '<td style="width:9%"> <Button onclick="ShowProviderDetails(' . (($pageNumber * $itemsByPage) + $i) . ')" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
+                $data .= '<td style="width:9%"> <Button onclick="ShowProviderDetails(' . $providersList[$pageNumber * $itemsByPage + $i]->id . ')" type="button" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
                 $data .= '<td style="width:9%"> <Button onclick="EditProvider (' . (($pageNumber * $itemsByPage) + $i) . ')"  class="btn" id="edit-btn"><i class="fa fa-edit"></i> Editar</Button> </td>';
-                $data .= '<td style="width:9%"> <button onclick="DeleteProvider(' . (($pageNumber * $itemsByPage) + $i) . ')" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
+                $data .= '<td style="width:9%"> <button onclick="DeleteProvider(' . $providersList[$pageNumber * $itemsByPage + $i]->id . ')" type="button" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
                 $data .= '</tr>';
             }
         }
-        return view('fornecedor', ['providersList' => $data]);
+        $this->providersList = $data;
+        view('fornecedor', ['providersList' => $this->providersList]); //retorna a view fornecedor e seta o valor do objeto providersList no html
+        return redirect('/');
+    }
+
+    //função para excluir
+    public function destroy($id)
+    {
+        $fornecedor = Fornecedor::findOrFail($id);
+        $fornecedor->delete();
+
+        return redirect('/');
+    }
+
+    public function showDetails($id)
+    {
+        return $fornecedor = Fornecedor::findOrFail($id);
+
+
+
+        //return redirect('/');
     }
 }

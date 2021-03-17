@@ -1,6 +1,8 @@
 window.onload = function () {
   history.replaceState("", "", "/");
-}
+}//para não registrar um novo fornecedor -cópia do anterior - a cada vez que a página for atualizada
+
+
 
 let providersList = []; // array que recebe a lista de fornecedores - todo novo fornecedor é adicionado a lista
 
@@ -82,11 +84,11 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
   //função para validação dos campos do formulário
   this.IsValid = function () {
 
-    if (this.nomeFantasia.length < 3) {
+    if (this.nomeFantasia.length < 3 || this.nomeFantasia.length > 255) {
       alert("O nome deve ter pelo menos 3 caracteres!");
       return false;
     }
-    if (this.razaoSocial.length < 3) {
+    if (this.razaoSocial.length < 3 || this.razaoSocial.length > 255) {
       alert("A razão social deve ter pelo menos 3 caracteres!");
       return false;
     }
@@ -96,7 +98,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
       return false;
     }
 
-    if (this.endereco.length < 20) {
+    if (this.endereco.length < 20 || this.endereco.length > 255) {
       alert("O endereço deve ter pelo menos 20 caracteres!");
       return false;
     }
@@ -127,6 +129,12 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
       alert("Você deve digitar o número do contrato completo!");
       return false;
     }
+
+    if (this.observacao.length > 255) {
+      alert("Você excedeu o limite de 255 caracteres no campo observação!");
+      return false;
+    }
+
     return true;
   }
 }
@@ -152,6 +160,7 @@ function SaveNewProvider() {
   if (currentProvider.IsValid()) {
     //adiciona o novo valor
     providersForm.action = "/submit";
+    providersForm.method = "POST";
     providersForm.submit();
     SetPageOverlayVisibility(false);
   }// else {
@@ -162,9 +171,11 @@ function SaveNewProvider() {
 }
 
 //função excluir
-function DeleteProvider(providerIndex) {
+function DeleteProvider(providerID) {
   if (window.confirm("Atenção! Isso vai excluir todos os dados do fornecedor. Deseja continuar?")) {
-    providersList.splice(providerIndex, 1);
+    providersForm.action = "/excluir/" + providerID;
+    providersForm.method = "POST";
+    providersForm.submit();
   }
   //verifica se todos os fornecedores acabaram, em caso positivi, volta uma página
   if (pageNumber >= Math.ceil(providersList.length / itemsByPage)) {
@@ -173,12 +184,29 @@ function DeleteProvider(providerIndex) {
 }
 
 //função detalhes 
-function ShowProviderDetails(providerIndex) {
-  FillOverlay(providerIndex);//preenche os campos do overlay com os dados do fornecedor escolhido
+function ShowProviderDetails(providerID) {
+
   SetPageOverlayVisibility(true);//deixa visível o overlay
   SetReadOnly(true);//bloqueia a edição dos dados
 
   document.getElementById("detailsButtonBox").style.display = "flex";//exibe os botões relacionados 
+
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      //document.getElementById("providersForm").innerHTML = this.responseText;
+      provider = JSON.parse(this.responseText);
+      FillOverlay(provider);
+    }
+  }
+  xmlhttp.open("GET", "/detalhes/" + providerID, true);
+  xmlhttp.send();
+
+
+  // providersForm.action = "/detalhes/" + providerID;
+  // providersForm.method = "GET";
+  // providersForm.target = "providersForm";
+  // providersForm.submit();
 }
 
 //função editar
@@ -193,8 +221,8 @@ function EditProvider(providerIndex) {
 }
 
 //preenche os campos do overlay com os dados do fornecedor escolhido
-function FillOverlay(providerIndex) {
-  let selectedProvider = providersList[providerIndex];
+function FillOverlay(provider) {
+  let selectedProvider = provider;
   document.getElementById("nomeFantasia").value = selectedProvider.nomeFantasia;
   document.getElementById('razaoSocial').value = selectedProvider.razaoSocial;
   document.getElementById('cnpj').value = selectedProvider.cnpj;
