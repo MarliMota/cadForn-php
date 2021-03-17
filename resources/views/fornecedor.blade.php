@@ -84,7 +84,7 @@
   - tabela, botões e "sombra cinza"-->
   <div id="pageOverlay">
     <div class="cadastro">
-      <form action="{{ route('registrar_fornecedor') }}" method="POST">
+      <form action="" method="POST" id="providersForm">
         @csrf
         <section class="providers" id="overlayWhiteBox">
           <table id="itens" class="table table-striped">
@@ -144,7 +144,8 @@
           <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel"
             id="newprovider-cancel-btn"><i class="fa fa-trash"></i>
             Descartar</Button>
-          <Button class="btn confirm" id="newprovider-confirm-btn"><i class="fa fa-check"></i>
+          <Button onclick="SaveNewProvider()" type="button" class="btn confirm" id="newprovider-confirm-btn"><i
+              class="fa fa-check"></i>
             Salvar</Button>
         </section>
         <section class="buttonBoxes" id="detailsButtonBox">

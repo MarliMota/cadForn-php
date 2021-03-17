@@ -7,7 +7,9 @@ let providersList = []; // array que recebe a lista de fornecedores - todo novo 
 //document.getElementById("pageOverlay") //seleciona um elemento do html
 let pageOverlay = document.getElementById("pageOverlay"); //salva o elemento do html em uma variável
 
-let providersTable = document.getElementById("providersTable") //onde a tablea vai ser desenhada no html
+let providersTable = document.getElementById("providersTable"); //onde a tablea vai ser desenhada no html
+
+let providersForm = document.getElementById("providersForm");
 
 let itemsByPage = 4;
 let pageNumber = 0;
@@ -27,8 +29,6 @@ let defaultProvider = new Provider(
 );
 
 providersList.push(defaultProvider);
-
-FetchAll(); //atualiza a lista na tela
 
 //função que mostra/esconde a tela de Overlay
 function SetPageOverlayVisibility(visible) {
@@ -131,39 +131,6 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
   }
 }
 
-//função que desenha a tabela na tela
-function FetchAll() {
-  let data = ""; //variavel que armeza o código html gerado no js e que no futuro será enviado para dentro do elemento providersTable
-
-  //contador de páginas
-  let numberOfPages = Math.ceil(providersList.length / itemsByPage);
-
-  numberOfPages = numberOfPages > 0 ? numberOfPages : 1;
-
-  document.getElementById("numberPage").innerHTML = ("página " + (pageNumber + 1) + " de " + numberOfPages);
-  //se tiver pelo menos um fornecedor
-  if (providersList.length > 0) {
-    //executa de acordo com a quantidade de fornecedores por página
-    for (let i = 0; i < itemsByPage; i++) {
-      //interrompe a função assim que todos os fornecedores da página atual forem adicionados a tabela, mesmo que não tenha atingido o máximo de  fornecedores por páginas
-      if (providersList.length <= pageNumber * itemsByPage + i) {
-        return providersTable.innerHTML = data;
-      }
-      //construção da tabela html
-      data += '<tr>';
-      data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].nomeFantasia + '</td>';
-      data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].razaoSocial + '</td>';
-      data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].cnpj + '</td>';
-      data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].telefone + '</td>';
-      data += '<td style="width:9%"> <Button onclick="ShowProviderDetails(' + ((pageNumber * itemsByPage) + i) + ')" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
-      data += '<td style="width:9%"> <Button onclick="EditProvider (' + ((pageNumber * itemsByPage) + i) + ')"  class="btn" id="edit-btn"><i class="fa fa-edit"></i> Editar</Button> </td>';
-      data += '<td style="width:9%"> <button onclick="DeleteProvider(' + ((pageNumber * itemsByPage) + i) + ')" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
-      data += '</tr>';
-    }
-  }
-  return providersTable.innerHTML = data;
-}
-
 //função que salva e exibe na tela o novo fornecedor
 function SaveNewProvider() {
   SetReadOnly(false);
@@ -184,12 +151,12 @@ function SaveNewProvider() {
 
   if (currentProvider.IsValid()) {
     //adiciona o novo valor
-    providersList.push(currentProvider);
-    FetchAll();
+    providersForm.action = "/submit";
+    providersForm.submit();
     SetPageOverlayVisibility(false);
   }// else {
   //   providersList.push(defaultProvider);
-  //   FetchAll();
+  //   ();
   //   SetPageOverlayVisibility(false);
   // }
 }
@@ -203,7 +170,6 @@ function DeleteProvider(providerIndex) {
   if (pageNumber >= Math.ceil(providersList.length / itemsByPage)) {
     ChangePage(-1);
   }
-  FetchAll();
 }
 
 //função detalhes 
@@ -267,8 +233,6 @@ SaveEditedFornecedor = function (providerIndex) {
   if (provider.IsValid()) {
     // Edit value
     providersList.splice(providerIndex, 1, provider);
-    // Display the new list
-    FetchAll();
     //fecha a página
     SetPageOverlayVisibility(false);
   }
@@ -279,7 +243,6 @@ function ChangePage(changeBy) {
   if (pageNumber + changeBy >= 0
     && pageNumber + changeBy < Math.ceil(providersList.length / itemsByPage)) {
     pageNumber += changeBy;
-    FetchAll();
   }
 }
 
@@ -307,18 +270,18 @@ function Print() {
 }
 
 //mascara jquery para preenchimento do formulario
-$(document).ready(function () {
+$(document).ready(function ($) {
   $("#cnpj").mask("99.999.999/9999-99");
 });
 
-$(document).ready(function () {
+$(document).ready(function ($) {
   $("#telefone").mask("(99)9999-9999");
 });
 
-$(document).ready(function () {
+$(document).ready(function ($) {
   $("#celular").mask("(99)99999-9999");
 });
 
-$(document).ready(function () {
+$(document).ready(function ($) {
   $("#contrato").mask("999999.9999-99");
 });

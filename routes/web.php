@@ -15,4 +15,4 @@ use App\Http\Controllers\FornecedorController;
 
 Route::get('/', [FornecedorController::class, 'fetchAll']);
 
-Route::post('/result=sucess', [FornecedorController::class, 'store'])->name('registrar_fornecedor');
+Route::post('/submit', [FornecedorController::class, 'store'])->name('registrar_fornecedor');
