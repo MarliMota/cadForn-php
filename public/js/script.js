@@ -17,20 +17,20 @@ let itemsByPage = 4;
 let pageNumber = 0;
 
 //instância do objeto Provider que fica fixa na página principal
-let defaultProvider = new Provider(
-  "Marli",
-  "Mota",
-  "00.000.000/0000-00",
-  "(00)0000-0000",
-  "(00)00000-0000",
-  "Rua das ruas, 99 - São paulo SP",
-  "marli@mota.com",
-  "www.marli.com.br",
-  "Softwares",
-  "000000.0000-01"
-);
+// let defaultProvider = new Provider(
+//   "Marli",
+//   "Mota",
+//   "00.000.000/0000-00",
+//   "(00)0000-0000",
+//   "(00)00000-0000",
+//   "Rua das ruas, 99 - São paulo SP",
+//   "marli@mota.com",
+//   "www.marli.com.br",
+//   "Softwares",
+//   "000000.0000-01"
+// );
 
-providersList.push(defaultProvider);
+//providersList.push(defaultProvider);
 
 //função que mostra/esconde a tela de Overlay
 function SetPageOverlayVisibility(visible) {
@@ -41,24 +41,24 @@ function SetPageOverlayVisibility(visible) {
   //   pageOverlay.style.display = "none";
   // }
 
-  if (!visible) {
-    //reseta os valores inseridos anteriormente
-    document.getElementById('nomeFantasia').value = "";
-    document.getElementById('razaoSocial').value = "";
-    document.getElementById('cnpj').value = "";
-    document.getElementById('telefone').value = "";
-    document.getElementById('celular').value = "";
-    document.getElementById('endereco').value = "";
-    document.getElementById('email').value = "";
-    document.getElementById('site').value = "";
-    document.getElementById('produto').value = "";
-    document.getElementById('contrato').value = "";
-    document.getElementById('observacao').value = "";
-    document.getElementById('addProviderButtonBox').style.display = "none";
-    document.getElementById('detailsButtonBox').style.display = "none";
-    document.getElementById('editButtonBox').style.display = "none";
-    SetReadOnly(false);
-  }
+  //   if (!visible) {
+  //     //reseta os valores inseridos anteriormente
+  //     document.getElementById('nomeFantasia').value = "";
+  //     document.getElementById('razaoSocial').value = "";
+  //     document.getElementById('cnpj').value = "";
+  //     document.getElementById('telefone').value = "";
+  //     document.getElementById('celular').value = "";
+  //     document.getElementById('endereco').value = "";
+  //     document.getElementById('email').value = "";
+  //     document.getElementById('site').value = "";
+  //     document.getElementById('produto').value = "";
+  //     document.getElementById('contrato').value = "";
+  //     document.getElementById('observacao').value = "";
+  //     document.getElementById('addProviderButtonBox').style.display = "none";
+  //     document.getElementById('detailsButtonBox').style.display = "none";
+  //     document.getElementById('editButtonBox').style.display = "none";
+  //     SetReadOnly(false);
+  //   }
 }
 
 //mosta/esconde os botões e toda a tela de adicionar  
@@ -134,7 +134,6 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
       alert("Você excedeu o limite de 255 caracteres no campo observação!");
       return false;
     }
-
     return true;
   }
 }
@@ -158,86 +157,75 @@ function SaveNewProvider() {
   );
 
   if (currentProvider.IsValid()) {
-    //adiciona o novo valor
-    providersForm.action = "/submit";
+    //Se o fornecedor for válido, a action do formulário se torna criar e o metodo muda para Post - depois submit
+    providersForm.action = "/criar";
     providersForm.method = "POST";
     providersForm.submit();
-    SetPageOverlayVisibility(false);
-  }// else {
-  //   providersList.push(defaultProvider);
-  //   ();
-  //   SetPageOverlayVisibility(false);
-  // }
+    //SetPageOverlayVisibility(false);
+  }
 }
 
 //função excluir
 function DeleteProvider(providerID) {
   if (window.confirm("Atenção! Isso vai excluir todos os dados do fornecedor. Deseja continuar?")) {
-    providersForm.action = "/excluir/" + providerID;
+    providersForm.action = "/deletar/" + providerID;
     providersForm.method = "POST";
     providersForm.submit();
   }
-  //verifica se todos os fornecedores acabaram, em caso positivi, volta uma página
-  if (pageNumber >= Math.ceil(providersList.length / itemsByPage)) {
-    ChangePage(-1);
-  }
+  //verifica se todos os fornecedores acabaram, em caso positivo, volta uma página
+  // if (pageNumber >= Math.ceil(providersList.length / itemsByPage)) {
+  //   ChangePage(-1);
+  // }
 }
 
 //função detalhes 
 function ShowProviderDetails(providerID) {
-
-  SetPageOverlayVisibility(true);//deixa visível o overlay
   SetReadOnly(true);//bloqueia a edição dos dados
-
   document.getElementById("detailsButtonBox").style.display = "flex";//exibe os botões relacionados 
+  FillOverlay(providerID);
+}
+
+//função editar
+function EditProvider(providerID) {
+  FillOverlay(providerID);
+  SetReadOnly(false);
+
+  document.getElementById("editButtonBox").style.display = "flex";//exibe os botões relacionados
+  //configura o botão de confirmar edição para salvar os novos dados 
+  document.getElementById("edit-confirm-btn").setAttribute("onClick", "javascript: SaveEditedProvider(" + providerID + ");");
+}
+
+//preenche os campos do overlay com os dados do fornecedor escolhido
+function FillOverlay(providerID) {
 
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       //document.getElementById("providersForm").innerHTML = this.responseText;
-      provider = JSON.parse(this.responseText);
-      FillOverlay(provider);
+      selectedProvider = JSON.parse(this.responseText);//converte o texto que o servidor retornou para Json
+
+      document.getElementById("nomeFantasia").value = selectedProvider.nomeFantasia;
+      document.getElementById('razaoSocial').value = selectedProvider.razaoSocial;
+      document.getElementById('cnpj').value = selectedProvider.cnpj;
+      document.getElementById('telefone').value = selectedProvider.telefone;
+      document.getElementById('celular').value = selectedProvider.celular;
+      document.getElementById('endereco').value = selectedProvider.endereco;
+      document.getElementById('email').value = selectedProvider.email;
+      document.getElementById('site').value = selectedProvider.site;
+      document.getElementById('produto').value = selectedProvider.produto;
+      document.getElementById('contrato').value = selectedProvider.contrato;
+      document.getElementById('observacao').value = selectedProvider.observacao;
+
+      SetPageOverlayVisibility(true);
     }
   }
-  xmlhttp.open("GET", "/detalhes/" + providerID, true);
+  xmlhttp.open("GET", "/ler/" + providerID, true);
   xmlhttp.send();
 
-
-  // providersForm.action = "/detalhes/" + providerID;
-  // providersForm.method = "GET";
-  // providersForm.target = "providersForm";
-  // providersForm.submit();
-}
-
-//função editar
-function EditProvider(providerIndex) {
-  FillOverlay(providerIndex);
-  SetPageOverlayVisibility(true);
-  SetReadOnly(false);
-
-  document.getElementById("editButtonBox").style.display = "flex";//exibe os botões relacionados
-  //configura o botão de confirmar edição para salvar os novos dados 
-  document.getElementById("edit-confirm-btn").setAttribute("onClick", "javascript: SaveEditedFornecedor(" + providerIndex + ");");
-}
-
-//preenche os campos do overlay com os dados do fornecedor escolhido
-function FillOverlay(provider) {
-  let selectedProvider = provider;
-  document.getElementById("nomeFantasia").value = selectedProvider.nomeFantasia;
-  document.getElementById('razaoSocial').value = selectedProvider.razaoSocial;
-  document.getElementById('cnpj').value = selectedProvider.cnpj;
-  document.getElementById('telefone').value = selectedProvider.telefone;
-  document.getElementById('celular').value = selectedProvider.celular;
-  document.getElementById('endereco').value = selectedProvider.endereco;
-  document.getElementById('email').value = selectedProvider.email;
-  document.getElementById('site').value = selectedProvider.site;
-  document.getElementById('produto').value = selectedProvider.produto;
-  document.getElementById('contrato').value = selectedProvider.contrato;
-  document.getElementById('observacao').value = selectedProvider.observacao;
 }
 
 
-SaveEditedFornecedor = function (providerIndex) {
+function SaveEditedProvider(providerID) {
   if (!window.confirm("Atenção! Isso pode alterar os dados do fornecedor. Deseja continuar?")) {
     return;
   }
@@ -259,19 +247,20 @@ SaveEditedFornecedor = function (providerIndex) {
 
   //Caso todas as informações sejam válidas atualiza a lista de fornecedores e esconde os campos de edição
   if (provider.IsValid()) {
-    // Edit value
-    providersList.splice(providerIndex, 1, provider);
+    providersForm.action = "/atualizar/" + providerID;
+    providersForm.method = "POST";
+    providersForm.submit();
+
     //fecha a página
-    SetPageOverlayVisibility(false);
+    //SetPageOverlayVisibility(false);
   }
 };
 
 //função para mudança de páginas
 function ChangePage(changeBy) {
-  if (pageNumber + changeBy >= 0
-    && pageNumber + changeBy < Math.ceil(providersList.length / itemsByPage)) {
-    pageNumber += changeBy;
-  }
+  providersForm.action = "/" + changeBy;
+  providersForm.method = "POST";
+  providersForm.submit();
 }
 
 //função editar campos (para tornar detalhes ineditável)

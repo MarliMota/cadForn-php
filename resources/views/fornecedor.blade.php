@@ -20,7 +20,8 @@
   <!--Estilos-->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
   <!--Links jquery-->
@@ -44,7 +45,6 @@
       <h2>Fornecedores</h2>
       <div class="titleButton">
         <button class="btn" onclick="SetNewProviderScreenVisibility(true)"><i class="fa fa-plus"></i> Adicionar</button>
-        <button class="btn" class="fa fa-search"> Buscar</button>
       </div>
     </section>
     <section class="providers">
@@ -83,13 +83,15 @@
   - tabela, botões e "sombra cinza"-->
   <div id="pageOverlay">
     <div class="cadastro">
-      <form action="" method="POST" id="providersForm">
+      <form action="" method="GET" id="providersForm">
         @csrf
         <section class="providers" id="overlayWhiteBox">
           <table id="itens" class="table table-striped">
             <tr>
               <th>Nome Fantasia</th>
-              <td> <input type="text" name="nomeFantasia" id="nomeFantasia" placeholder="Nome Fantasia" autocomplete="off"></td>
+              <input type="hidden" name="pageNumber" id="pageNumber">
+              <td> <input type="text" name="nomeFantasia" id="nomeFantasia" placeholder="Nome Fantasia"
+                  autocomplete="off"></td>
             </tr>
             <tr>
               <th>Razão Social</th>
@@ -130,7 +132,8 @@
             </tr>
             <tr>
               <th>Observação</th>
-              <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação" autocomplete="none"> </textarea> </td>
+              <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação"
+                  autocomplete="none"> </textarea> </td>
             </tr>
           </table>
 
@@ -138,17 +141,21 @@
 
         <!--botões-->
         <section class="buttonBoxes" id="addProviderButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel" id="newprovider-cancel-btn"><i class="fa fa-trash"></i>
+          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel"
+            id="newprovider-cancel-btn"><i class="fa fa-trash"></i>
             Descartar</Button>
-          <Button onclick="SaveNewProvider()" type="button" class="btn confirm" id="newprovider-confirm-btn"><i class="fa fa-check"></i>
+          <Button onclick="SaveNewProvider()" type="button" class="btn confirm" id="newprovider-confirm-btn"><i
+              class="fa fa-check"></i>
             Salvar</Button>
         </section>
         <section class="buttonBoxes" id="detailsButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility(false)" class="btn cancel" id="details-cancel-btn"><i class="fa fa-times"></i> Fechar</Button>
+          <Button type="button" onclick="SetPageOverlayVisibility(false)" class="btn cancel" id="details-cancel-btn"><i
+              class="fa fa-times"></i> Fechar</Button>
           <button onclick="Print()" class="btn confirm"><i class="fa fa-print"></i> Imprimir</button>
         </section>
         <section class="buttonBoxes" id="editButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel" id="edit-cancel-btn"><i class="fa fa-times"></i>
+          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel" id="edit-cancel-btn"><i
+              class="fa fa-times"></i>
             Cancelar</Button>
           <Button class="btn confirm" id="edit-confirm-btn"><i class="fa fa-check"></i>
             Salvar</Button>
