@@ -78,6 +78,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
   this.produto = produto;
   this.contrato = contrato;
   this.observacao = observacao;
+  this.IsArchived = 0;
   this.ID = 0;
 
   //função para validação dos campos do formulário

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Fornecedor;
+use GrahamCampbell\ResultType\Result;
 use Mockery\Undefined;
 
 
@@ -30,13 +31,15 @@ class FornecedorController extends Controller
             'produto' => $request->produto,
             'contrato' => $request->contrato,
             'observacao' => $request->observacao,
+            'IsArchived' => $request->IsArchived,
         ]);
     }
 
     //função que preenche a tabela
     public function ReadAll()
     {
-        return Fornecedor::get(); //função get de dentro da classe fornecedor - informações do banco de dados
+        $providersList = Fornecedor::select("*")->where('isArchived', 0)->get(); //função get de dentro da classe fornecedor - informações do banco de dados
+        return $providersList;
     }
 
 
@@ -51,6 +54,27 @@ class FornecedorController extends Controller
         $id = $_POST['id'];
         $fornecedor = Fornecedor::findOrFail($id);
         $fornecedor->delete();
+    }
+
+    public function SoftDelete()
+    {
+        $id = $_POST['id'];
+        $fornecedor = Fornecedor::findOrFail($id);
+
+        $fornecedor->Update([
+            'nomeFantasia' => $fornecedor->nomeFantasia,
+            'razaoSocial' => $fornecedor->razaoSocial,
+            'cnpj' => $fornecedor->cnpj,
+            'telefone' => $fornecedor->telefone,
+            'celular' => $fornecedor->celular,
+            'endereco' => $fornecedor->endereco,
+            'email' => $fornecedor->email,
+            'site' => $fornecedor->site,
+            'produto' => $fornecedor->produto,
+            'contrato' => $fornecedor->contrato,
+            'observacao' => $fornecedor->observacao,
+            'IsArchived' => 1,
+        ]);
     }
 
     //Função editar
@@ -70,6 +94,7 @@ class FornecedorController extends Controller
             'produto' => $request->produto,
             'contrato' => $request->contrato,
             'observacao' => $request->observacao,
+            'IsArchived' => $request->IsArchived,
         ]);
     }
 

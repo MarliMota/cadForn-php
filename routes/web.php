@@ -29,7 +29,7 @@ Route::get('/lertodos', [FornecedorController::class, 'ReadAll']);
 Route::post('/atualizar', [FornecedorController::class, 'Update']);
 
 //rota exclusão
-Route::post('/deletar', [FornecedorController::class, 'Delete']);
+Route::post('/deletar', [FornecedorController::class, 'SoftDelete']);
 
 //rota para mudança de lista de fornecedores
 Route::post('/{changeBy}', [FornecedorController::class, 'ChangePageBy']);
