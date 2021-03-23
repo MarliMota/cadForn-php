@@ -87,19 +87,6 @@ class FornecedorController extends Controller
         $fornecedor = Fornecedor::findOrFail($id);
 
         $fornecedor->Update([
-            'nomeFantasia' => $fornecedor->nomeFantasia,
-            'razaoSocial' => $fornecedor->razaoSocial,
-            'cnpj' => $fornecedor->cnpj,
-            'telefone' => $fornecedor->telefone,
-            'celular' => $fornecedor->celular,
-            'endereco' => $fornecedor->endereco,
-            'email' => $fornecedor->email,
-            'site' => $fornecedor->site,
-            'produto' => $fornecedor->produto,
-            'contrato' => $fornecedor->contrato,
-            'inicioDoContrato' => $fornecedor->inicioDoContrato,
-            'fimDoContrato' => $fornecedor->inicioDoContrato,
-            'observacao' => $fornecedor->observacao,
             'IsArchived' => 1,
         ]);
     }
@@ -123,7 +110,6 @@ class FornecedorController extends Controller
             'inicioDoContrato' => $request->inicioDoContrato,
             'fimDoContrato' => $request->fimDoContrato,
             'observacao' => $request->observacao,
-            'IsArchived' => $request->IsArchived,
         ]);
     }
 
