@@ -30,6 +30,8 @@ class FornecedorController extends Controller
             'site' => $request->site,
             'produto' => $request->produto,
             'contrato' => $request->contrato,
+            'inicioDoContrato' => $request->inicioDoContrato,
+            'fimDoContrato' => $request->fimDoContrato,
             'observacao' => $request->observacao,
             'IsArchived' => $request->IsArchived,
         ]);
@@ -72,6 +74,8 @@ class FornecedorController extends Controller
             'site' => $fornecedor->site,
             'produto' => $fornecedor->produto,
             'contrato' => $fornecedor->contrato,
+            'inicioDoContrato' => $fornecedor->inicioDoContrato,
+            'fimDoContrato' => $fornecedor->inicioDoContrato,
             'observacao' => $fornecedor->observacao,
             'IsArchived' => 1,
         ]);
@@ -93,6 +97,8 @@ class FornecedorController extends Controller
             'site' => $request->site,
             'produto' => $request->produto,
             'contrato' => $request->contrato,
+            'inicioDoContrato' => $request->inicioDoContrato,
+            'fimDoContrato' => $request->fimDoContrato,
             'observacao' => $request->observacao,
             'IsArchived' => $request->IsArchived,
         ]);

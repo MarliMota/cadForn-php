@@ -126,6 +126,15 @@
             <td> <input type="text" name="contrato" id="contrato" placeholder="Contrato" autocomplete="off"></td>
           </tr>
           <tr>
+            <th>Inicio do Contrato</th>
+            <td> <input type="date" name="inicioDoContrato" id="inicioDoContrato" placeholder="" autocomplete="off">
+            </td>
+          </tr>
+          <tr>
+            <th>Fim do Contrato</th>
+            <td> <input type="date" name="fimDoContrato" id="fimDoContrato" placeholder="" autocomplete="off"></td>
+          </tr>
+          <tr>
             <th>Observação</th>
             <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação"
                 autocomplete="none"> </textarea> </td>
