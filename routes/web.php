@@ -25,6 +25,8 @@ Route::get('/', [FornecedorController::class, 'HomePage']);
 //rota para atualização de página - informada uma página específica
 Route::get('/lertodos', [FornecedorController::class, 'ReadAll']);
 
+Route::post('/buscar', [FornecedorController::class, 'Search']);
+
 //rota exclusão
 Route::post('/atualizar', [FornecedorController::class, 'Update']);
 

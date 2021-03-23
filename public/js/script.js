@@ -13,6 +13,8 @@ let providersTable = document.getElementById("providersTable"); //onde a tablea 
 
 let providersForm = document.getElementById("providersForm");
 
+var xmlhttpSearch;
+
 let itemsByPage = 2;
 let pageNumber = 0;
 let numberOfPages = 1;
@@ -353,12 +355,14 @@ $(document).ready(function () {
 
 //função que preenche a tabela
 
-function ReadAll() {
+function ReadAll(providersList = null) {
 
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      providersList = JSON.parse(this.responseText); //função get de dentro da classe fornecedor - informações do banco de dados
+      if (providersList == null) {
+        providersList = JSON.parse(this.responseText); //função get de dentro da classe fornecedor - informações do banco de dados
+      }
 
       data = ""; //variavel que armeza o código html gerado no js e que no futuro será enviado para dentro do elemento providersTable
 
@@ -397,6 +401,31 @@ function ReadAll() {
 
   xmlhttp.open("GET", "/lertodos", true);
   xmlhttp.send();
+}
+
+function Search(textToSearch) {
+  if (textToSearch == "") {
+    return ReadAll();
+  }
+
+  if (xmlhttpSearch) {
+    xmlhttpSearch.abort();
+  }
+  else {
+    xmlhttpSearch = new XMLHttpRequest();
+  }
+
+  xmlhttpSearch.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      return ReadAll(JSON.parse(this.responseText)); //função get de dentro da classe fornecedor - informações do banco de dados
+    }
+  }
+
+  xmlhttpSearch.open("POST", "/buscar", true);
+  xmlhttpSearch.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  if (textToSearch != "") {
+    xmlhttpSearch.send("textToSearch=" + textToSearch);
+  }
 }
 
 

@@ -187,6 +187,7 @@ textarea:-moz-placeholder { color:rgb(170, 170, 170); }
   border: none;
   padding-left: 5%;
   font-weight: bold;
+  color:teal;
 }
 
 #searchbox::-webkit-input-placeholder  {
