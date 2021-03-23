@@ -130,7 +130,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
     }
 
     if (this.inicioDoContrato >= this.fimDoContrato) {
-      alert("O inicio do contrato deve acontecer antes do fim do contrato!"); imple
+      alert("O inicio do contrato deve acontecer antes do fim do contrato!");
       return false;
     }
 
