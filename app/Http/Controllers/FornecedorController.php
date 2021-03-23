@@ -40,7 +40,9 @@ class FornecedorController extends Controller
     //função que preenche a tabela
     public function ReadAll()
     {
-        $providersList = Fornecedor::select("*")->where('isArchived', 0)->get(); //função get de dentro da classe fornecedor - informações do banco de dados
+        $providersList = Fornecedor::select("*")->where('isArchived', 0)
+            ->orderBy('id', 'DESC')
+            ->get(); //função get de dentro da classe fornecedor - informações do banco de dados
         return $providersList;
     }
 
@@ -60,6 +62,7 @@ class FornecedorController extends Controller
             ->orWhere('contrato', 'LIKE', '%' . $textToSearch . '%')
             ->orWhere('inicioDoContrato', 'LIKE', '%' . $textToSearch . '%')
             ->orWhere('fimDoContrato', 'LIKE', '%' . $textToSearch . '%')
+            ->orderBy('id', 'DESC')
             ->get(); //função get de dentro da classe fornecedor - informações do banco de dados//função get de dentro da classe fornecedor - informações do banco de dados
         return $providersList;
     }

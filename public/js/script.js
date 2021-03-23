@@ -177,7 +177,7 @@ function SaveNewProvider() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
-        ReadAll();
+        Search(document.getElementById("searchbox").value);
         SetPageOverlayVisibility(false);
       }
     }
@@ -198,7 +198,7 @@ function DeleteProvider(providerID) {
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         //verifica se todos os fornecedores acabaram, em caso positivo, volta uma página
-        ReadAll();
+        Search(document.getElementById("searchbox").value);
       }
     }
 
@@ -290,7 +290,7 @@ function SaveEditedProvider(providerID) {
 
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
-        ReadAll();
+        Search(document.getElementById("searchbox").value);
         SetPageOverlayVisibility(false);
       }
     }
@@ -307,7 +307,7 @@ function ChangePage(changeBy) {
   if (pageNumber + changeBy >= 0
     && pageNumber + changeBy < numberOfPages) {
     pageNumber += changeBy;
-    ReadAll();
+    Search(document.getElementById("searchbox").value);
   }
 }
 
