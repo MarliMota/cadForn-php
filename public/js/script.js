@@ -375,6 +375,8 @@ function ReadAll(providersList = null) {
         return ChangePage(-1);
       }
 
+      document.getElementById("numberPage").innerHTML = ("página " + (pageNumber + 1) + " de " + numberOfPages);
+
       //se tiver pelo menos um fornecedor
       if (providersList.length > 0) {
         //executa de acordo com a quantidade de fornecedores por página
