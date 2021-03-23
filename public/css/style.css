@@ -97,6 +97,11 @@ body {
   cursor: pointer;
 }
 
+#numberPage {
+  font-weight: bold;
+  padding: 5px;
+}
+
 /*botoes*/
 /*botão adicinar novo*/
 .btn {
