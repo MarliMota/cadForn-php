@@ -20,13 +20,16 @@ Route::post('/criar', [FornecedorController::class, 'Create']);
 Route::get('/ler/{id}', [FornecedorController::class, 'Read']);
 
 //rota para atualização de página - preenche a tabela
-Route::get('/', [FornecedorController::class, 'ReadAll']);
+Route::get('/', [FornecedorController::class, 'HomePage']);
+
+//rota para atualização de página - informada uma página específica
+Route::get('/lertodos', [FornecedorController::class, 'ReadAll']);
 
 //rota exclusão
-Route::post('/atualizar/{id}', [FornecedorController::class, 'Update']);
+Route::post('/atualizar', [FornecedorController::class, 'Update']);
 
 //rota exclusão
-Route::post('/deletar/{id}', [FornecedorController::class, 'Delete']);
+Route::post('/deletar', [FornecedorController::class, 'Delete']);
 
 //rota para mudança de lista de fornecedores
 Route::post('/{changeBy}', [FornecedorController::class, 'ChangePageBy']);

@@ -61,10 +61,7 @@
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            <?php
-            echo "{$providersList}";
-            ?>
+          <tbody id="providersTable">
             <!--espaço reservado para a tabela que é criada pela função FetchAll-->
           </tbody>
         </table>
@@ -83,84 +80,81 @@
   - tabela, botões e "sombra cinza"-->
   <div id="pageOverlay">
     <div class="cadastro">
-      <form action="" method="GET" id="providersForm">
-        @csrf
-        <section class="providers" id="overlayWhiteBox">
-          <table id="itens" class="table table-striped">
-            <tr>
-              <th>Nome Fantasia</th>
-              <input type="hidden" name="pageNumber" id="pageNumber">
-              <td> <input type="text" name="nomeFantasia" id="nomeFantasia" placeholder="Nome Fantasia"
-                  autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Razão Social</th>
-              <td> <input type="text" name="razaoSocial" id="razaoSocial" placeholder="Razão Social" autocomplete="off">
-              </td>
-            </tr>
-            <tr>
-              <th>CNPJ</th>
-              <td> <input type="text" name="cnpj" id="cnpj" placeholder="CNPJ" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Telefone</th>
-              <td> <input type="tel" name="telefone" id="telefone" placeholder="Telefone" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Celular</th>
-              <td> <input type="tel" name="celular" id="celular" placeholder="Celular" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Endereço</th>
-              <td> <input type="text" name="endereco" id="endereco" placeholder="Endereço" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>E-mail</th>
-              <td> <input type="email" name="email" id="email" placeholder="E-mail" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Site</th>
-              <td> <input type="text" name="site" id="site" placeholder="Site" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Produto</th>
-              <td> <input type="text" name="produto" id="produto" placeholder="Produto" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Contrato</th>
-              <td> <input type="text" name="contrato" id="contrato" placeholder="Contrato" autocomplete="off"></td>
-            </tr>
-            <tr>
-              <th>Observação</th>
-              <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação"
-                  autocomplete="none"> </textarea> </td>
-            </tr>
-          </table>
+      <section class="providers" id="overlayWhiteBox">
+        <table id="itens" class="table table-striped">
+          <tr>
+            <th>Nome Fantasia</th>
+            <input type="hidden" name="pageNumber" id="pageNumber">
+            <td> <input type="text" name="nomeFantasia" id="nomeFantasia" placeholder="Nome Fantasia"
+                autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Razão Social</th>
+            <td> <input type="text" name="razaoSocial" id="razaoSocial" placeholder="Razão Social" autocomplete="off">
+            </td>
+          </tr>
+          <tr>
+            <th>CNPJ</th>
+            <td> <input type="text" name="cnpj" id="cnpj" placeholder="CNPJ" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Telefone</th>
+            <td> <input type="tel" name="telefone" id="telefone" placeholder="Telefone" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Celular</th>
+            <td> <input type="tel" name="celular" id="celular" placeholder="Celular" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Endereço</th>
+            <td> <input type="text" name="endereco" id="endereco" placeholder="Endereço" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>E-mail</th>
+            <td> <input type="email" name="email" id="email" placeholder="E-mail" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Site</th>
+            <td> <input type="text" name="site" id="site" placeholder="Site" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Produto</th>
+            <td> <input type="text" name="produto" id="produto" placeholder="Produto" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Contrato</th>
+            <td> <input type="text" name="contrato" id="contrato" placeholder="Contrato" autocomplete="off"></td>
+          </tr>
+          <tr>
+            <th>Observação</th>
+            <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação"
+                autocomplete="none"> </textarea> </td>
+          </tr>
+        </table>
 
-        </section>
+      </section>
 
-        <!--botões-->
-        <section class="buttonBoxes" id="addProviderButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel"
-            id="newprovider-cancel-btn"><i class="fa fa-trash"></i>
-            Descartar</Button>
-          <Button onclick="SaveNewProvider()" type="button" class="btn confirm" id="newprovider-confirm-btn"><i
-              class="fa fa-check"></i>
-            Salvar</Button>
-        </section>
-        <section class="buttonBoxes" id="detailsButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility(false)" class="btn cancel" id="details-cancel-btn"><i
-              class="fa fa-times"></i> Fechar</Button>
-          <button onclick="Print()" class="btn confirm"><i class="fa fa-print"></i> Imprimir</button>
-        </section>
-        <section class="buttonBoxes" id="editButtonBox">
-          <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel" id="edit-cancel-btn"><i
-              class="fa fa-times"></i>
-            Cancelar</Button>
-          <Button class="btn confirm" id="edit-confirm-btn"><i class="fa fa-check"></i>
-            Salvar</Button>
-        </section>
-      </form>
+      <!--botões-->
+      <section class="buttonBoxes" id="addProviderButtonBox">
+        <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel"
+          id="newprovider-cancel-btn"><i class="fa fa-trash"></i>
+          Descartar</Button>
+        <Button onclick="SaveNewProvider()" type="button" class="btn confirm" id="newprovider-confirm-btn"><i
+            class="fa fa-check"></i>
+          Salvar</Button>
+      </section>
+      <section class="buttonBoxes" id="detailsButtonBox">
+        <Button type="button" onclick="SetPageOverlayVisibility(false)" class="btn cancel" id="details-cancel-btn"><i
+            class="fa fa-times"></i> Fechar</Button>
+        <button onclick="Print()" class="btn confirm"><i class="fa fa-print"></i> Imprimir</button>
+      </section>
+      <section class="buttonBoxes" id="editButtonBox">
+        <Button type="button" onclick="SetPageOverlayVisibility (false)" class="btn cancel" id="edit-cancel-btn"><i
+            class="fa fa-times"></i>
+          Cancelar</Button>
+        <Button class="btn confirm" id="edit-confirm-btn"><i class="fa fa-check"></i>
+          Salvar</Button>
+      </section>
     </div>
   </div>
 

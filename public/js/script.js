@@ -1,10 +1,10 @@
-window.onload = function () {
-  history.replaceState("", "", "/");
-}//para não registrar um novo fornecedor -cópia do anterior - a cada vez que a página for atualizada
+// window.onload = function () {
+//   history.replaceState("", "", "/");
+// }//para não registrar um novo fornecedor -cópia do anterior - a cada vez que a página for atualizada
 
 
 
-let providersList = []; // array que recebe a lista de fornecedores - todo novo fornecedor é adicionado a lista
+// let providersList = []; // array que recebe a lista de fornecedores - todo novo fornecedor é adicionado a lista
 
 //document.getElementById("pageOverlay") //seleciona um elemento do html
 let pageOverlay = document.getElementById("pageOverlay"); //salva o elemento do html em uma variável
@@ -13,8 +13,9 @@ let providersTable = document.getElementById("providersTable"); //onde a tablea 
 
 let providersForm = document.getElementById("providersForm");
 
-let itemsByPage = 4;
+let itemsByPage = 2;
 let pageNumber = 0;
+let numberOfPages = 1;
 
 //instância do objeto Provider que fica fixa na página principal
 // let defaultProvider = new Provider(
@@ -32,33 +33,30 @@ let pageNumber = 0;
 
 //providersList.push(defaultProvider);
 
+ReadAll();
+
 //função que mostra/esconde a tela de Overlay
 function SetPageOverlayVisibility(visible) {
   pageOverlay.style.display = visible ? "block" : "none";
-  // if (visible) {
-  //   pageOverlay.style.display = "block";//mostra a tela de cadastro 
-  // } else {
-  //   pageOverlay.style.display = "none";
-  // }
 
-  //   if (!visible) {
-  //     //reseta os valores inseridos anteriormente
-  //     document.getElementById('nomeFantasia').value = "";
-  //     document.getElementById('razaoSocial').value = "";
-  //     document.getElementById('cnpj').value = "";
-  //     document.getElementById('telefone').value = "";
-  //     document.getElementById('celular').value = "";
-  //     document.getElementById('endereco').value = "";
-  //     document.getElementById('email').value = "";
-  //     document.getElementById('site').value = "";
-  //     document.getElementById('produto').value = "";
-  //     document.getElementById('contrato').value = "";
-  //     document.getElementById('observacao').value = "";
-  //     document.getElementById('addProviderButtonBox').style.display = "none";
-  //     document.getElementById('detailsButtonBox').style.display = "none";
-  //     document.getElementById('editButtonBox').style.display = "none";
-  //     SetReadOnly(false);
-  //   }
+  if (!visible) {
+    //reseta os valores inseridos anteriormente
+    document.getElementById('nomeFantasia').value = "";
+    document.getElementById('razaoSocial').value = "";
+    document.getElementById('cnpj').value = "";
+    document.getElementById('telefone').value = "";
+    document.getElementById('celular').value = "";
+    document.getElementById('endereco').value = "";
+    document.getElementById('email').value = "";
+    document.getElementById('site').value = "";
+    document.getElementById('produto').value = "";
+    document.getElementById('contrato').value = "";
+    document.getElementById('observacao').value = "";
+    document.getElementById('addProviderButtonBox').style.display = "none";
+    document.getElementById('detailsButtonBox').style.display = "none";
+    document.getElementById('editButtonBox').style.display = "none";
+    SetReadOnly(false);
+  }
 }
 
 //mosta/esconde os botões e toda a tela de adicionar  
@@ -80,6 +78,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
   this.produto = produto;
   this.contrato = contrato;
   this.observacao = observacao;
+  this.ID = 0;
 
   //função para validação dos campos do formulário
   this.IsValid = function () {
@@ -114,7 +113,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
     }
 
     //regex: lógica para padrões
-    let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+/;
     if (!regex.test(this.email)) {
       alert("Você deve digitar um e-mail válido!");
       return false;
@@ -158,24 +157,44 @@ function SaveNewProvider() {
 
   if (currentProvider.IsValid()) {
     //Se o fornecedor for válido, a action do formulário se torna criar e o metodo muda para Post - depois submit
-    providersForm.action = "/criar";
-    providersForm.method = "POST";
-    providersForm.submit();
-    //SetPageOverlayVisibility(false);
+    // providersForm.action = "/criar";
+    // providersForm.method = "POST";
+    // providersForm.submit();
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        ReadAll();
+        SetPageOverlayVisibility(false);
+      }
+    }
+
+    xmlhttp.open('POST', '/criar', true);
+    xmlhttp.setRequestHeader("Accept", "application/json");
+    //    xmlhttp.setRequestHeader('x-csrf-token', getCSRFToken());
+    xmlhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+
+    xmlhttp.send(JSON.stringify(currentProvider));
   }
 }
 
 //função excluir
 function DeleteProvider(providerID) {
   if (window.confirm("Atenção! Isso vai excluir todos os dados do fornecedor. Deseja continuar?")) {
-    providersForm.action = "/deletar/" + providerID;
-    providersForm.method = "POST";
-    providersForm.submit();
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        //verifica se todos os fornecedores acabaram, em caso positivo, volta uma página
+        ReadAll();
+      }
+    }
+
+    xmlhttp.open('POST', '/deletar', true);
+
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xmlhttp.send('id=' + providerID);
   }
-  //verifica se todos os fornecedores acabaram, em caso positivo, volta uma página
-  // if (pageNumber >= Math.ceil(providersList.length / itemsByPage)) {
-  //   ChangePage(-1);
-  // }
+
 }
 
 //função detalhes 
@@ -198,7 +217,7 @@ function EditProvider(providerID) {
 //preenche os campos do overlay com os dados do fornecedor escolhido
 function FillOverlay(providerID) {
 
-  var xmlhttp = new XMLHttpRequest();
+  let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       //document.getElementById("providersForm").innerHTML = this.responseText;
@@ -245,22 +264,33 @@ function SaveEditedProvider(providerID) {
     document.getElementById('observacao').value
   );
 
+  provider.ID = providerID;
+
   //Caso todas as informações sejam válidas atualiza a lista de fornecedores e esconde os campos de edição
   if (provider.IsValid()) {
-    providersForm.action = "/atualizar/" + providerID;
-    providersForm.method = "POST";
-    providersForm.submit();
+    let xmlhttp = new XMLHttpRequest();
 
-    //fecha a página
-    //SetPageOverlayVisibility(false);
+    xmlhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        ReadAll();
+        SetPageOverlayVisibility(false);
+      }
+    }
+
+    xmlhttp.open('POST', '/atualizar', true);
+    xmlhttp.setRequestHeader("Accept", "application/json");
+    xmlhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    xmlhttp.send(JSON.stringify(provider));
   }
 };
 
 //função para mudança de páginas
 function ChangePage(changeBy) {
-  providersForm.action = "/" + changeBy;
-  providersForm.method = "POST";
-  providersForm.submit();
+  if (pageNumber + changeBy >= 0
+    && pageNumber + changeBy < numberOfPages) {
+    pageNumber += changeBy;
+    ReadAll();
+  }
 }
 
 //função editar campos (para tornar detalhes ineditável)
@@ -287,18 +317,68 @@ function Print() {
 }
 
 //mascara jquery para preenchimento do formulario
-$(document).ready(function ($) {
+$(document).ready(function () {
   $("#cnpj").mask("99.999.999/9999-99");
 });
 
-$(document).ready(function ($) {
+$(document).ready(function () {
   $("#telefone").mask("(99)9999-9999");
 });
 
-$(document).ready(function ($) {
+$(document).ready(function () {
   $("#celular").mask("(99)99999-9999");
 });
 
-$(document).ready(function ($) {
+$(document).ready(function () {
   $("#contrato").mask("999999.9999-99");
 });
+
+//função que preenche a tabela
+
+function ReadAll() {
+
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      providersList = JSON.parse(this.responseText); //função get de dentro da classe fornecedor - informações do banco de dados
+
+      data = ""; //variavel que armeza o código html gerado no js e que no futuro será enviado para dentro do elemento providersTable
+
+      //contador de páginas
+      numberOfPages = Math.ceil(providersList.length / itemsByPage);
+
+      numberOfPages = numberOfPages > 0 ? numberOfPages : 1;
+
+      if (pageNumber >= numberOfPages) {
+        return ChangePage(-1);
+      }
+
+      //se tiver pelo menos um fornecedor
+      if (providersList.length > 0) {
+        //executa de acordo com a quantidade de fornecedores por página
+        for (i = 0; i < itemsByPage; i++) {
+          //interrompe a função assim que todos os fornecedores da página atual forem adicionados a tabela, mesmo que não tenha atingido o máximo de  fornecedores por páginas
+          if (providersList.length <= pageNumber * itemsByPage + i) {
+            return document.getElementById("providersTable").innerHTML = data;
+          }
+          //construção da tabela html
+          data += '<tr>';
+          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].nomeFantasia + '</td>';
+          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].razaoSocial + '</td>';
+          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].cnpj + '</td>';
+          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].telefone + '</td>';
+          data += '<td style="width:9%"> <Button onclick="ShowProviderDetails(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
+          data += '<td style="width:9%"> <Button onclick="EditProvider (' + providersList[pageNumber * itemsByPage + i].id + ')"  class="btn" id="edit-btn"><i class="fa fa-edit"></i> Editar</Button> </td>';
+          data += '<td style="width:9%"> <button onclick="DeleteProvider(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
+          data += '</tr>';
+        }
+      }
+      return document.getElementById("providersTable").innerHTML = data;
+    }
+  }
+
+  xmlhttp.open("GET", "/lertodos", true);
+  xmlhttp.send();
+}
+
+

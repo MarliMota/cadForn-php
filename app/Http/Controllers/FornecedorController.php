@@ -12,7 +12,7 @@ class FornecedorController extends Controller
 {
     //public $providersList;
 
-    public $pageNumber = 0;
+    public $currentPage = 0;
     public $itemsByPage = 4;
 
     //salva os dados do fornecedor
@@ -31,45 +31,12 @@ class FornecedorController extends Controller
             'contrato' => $request->contrato,
             'observacao' => $request->observacao,
         ]);
-
-        return redirect('/'); //recarrega a página 
     }
 
     //função que preenche a tabela
     public function ReadAll()
     {
-
-        $providersList = Fornecedor::get(); //função get de dentro da classe fornecedor - informações do banco de dados
-
-        $data = ""; //variavel que armeza o código html gerado no js e que no futuro será enviado para dentro do elemento providersTable
-
-        //contador de páginas
-        $numberOfPages = ceil(count($providersList) / $this->itemsByPage);
-
-        $numberOfPages = $numberOfPages > 0 ? $numberOfPages : 1;
-
-        //se tiver pelo menos um fornecedor
-        if (count($providersList) > 0) {
-            //executa de acordo com a quantidade de fornecedores por página
-            for ($i = 0; $i < $this->itemsByPage; $i++) {
-                //interrompe a função assim que todos os fornecedores da página atual forem adicionados a tabela, mesmo que não tenha atingido o máximo de  fornecedores por páginas
-                if (count($providersList) <= $this->pageNumber * $this->itemsByPage + $i) {
-                    return view('fornecedor', ['providersList' => $data]);
-                }
-                //construção da tabela html
-                $data .= '<tr>';
-                $data .= '<td style="width:9%">' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->nomeFantasia . '</td>';
-                $data .= '<td style="width:9%">' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->razaoSocial . '</td>';
-                $data .= '<td style="width:9%">' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->cnpj . '</td>';
-                $data .= '<td style="width:9%">' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->telefone . '</td>';
-                $data .= '<td style="width:9%"> <Button onclick="ShowProviderDetails(' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->id . ')" type="button" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
-                $data .= '<td style="width:9%"> <Button onclick="EditProvider (' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->id . ')"  class="btn" id="edit-btn"><i class="fa fa-edit"></i> Editar</Button> </td>';
-                $data .= '<td style="width:9%"> <button onclick="DeleteProvider(' . $providersList[$this->pageNumber * $this->itemsByPage + $i]->id . ')" type="button" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
-                $data .= '</tr>';
-            }
-        }
-        $this->providersList = $data;
-        return view('fornecedor', ['providersList' => $this->providersList]); //retorna a view fornecedor e seta o valor do objeto providersList no html
+        return Fornecedor::get(); //função get de dentro da classe fornecedor - informações do banco de dados
     }
 
 
@@ -79,18 +46,17 @@ class FornecedorController extends Controller
     }
 
     //função para excluir
-    public function Delete($id)
+    public function Delete()
     {
+        $id = $_POST['id'];
         $fornecedor = Fornecedor::findOrFail($id);
         $fornecedor->delete();
-
-        return redirect('/');
     }
 
     //Função editar
-    public function Update(Request $request, $id)
+    public function Update(Request $request)
     {
-        $fornecedor = Fornecedor::findOrFail($id);
+        $fornecedor = Fornecedor::findOrFail($request->ID);
 
         $fornecedor->Update([
             'nomeFantasia' => $request->nomeFantasia,
@@ -105,16 +71,10 @@ class FornecedorController extends Controller
             'contrato' => $request->contrato,
             'observacao' => $request->observacao,
         ]);
-
-        return redirect('/');
     }
 
-    public function ChangePageBy($changeBy)
+    public function HomePage()
     {
-        if ($this->pageNumber + $changeBy >= 0 && $this->pageNumber + $changeBy < ceil(count(Fornecedor::get()) / $this->itemsByPage)) {
-            $this->pageNumber += $changeBy;
-        }
-
-        return $this->ReadAll();
+        return view('fornecedor', []);
     }
 }
