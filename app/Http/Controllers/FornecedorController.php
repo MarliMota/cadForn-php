@@ -19,7 +19,7 @@ class FornecedorController extends Controller
     //salva os dados do fornecedor
     public function Create(Request $request) //request das informações do formulário
     {
-        Fornecedor::create([
+        $fornecedor = Fornecedor::create([
             'nomeFantasia' => $request->nomeFantasia,
             'razaoSocial' => $request->razaoSocial,
             'cnpj' => $request->cnpj,
@@ -35,6 +35,8 @@ class FornecedorController extends Controller
             'observacao' => $request->observacao,
             'IsArchived' => $request->IsArchived,
         ]);
+
+        $this->sendNewRowCreatedEmail($fornecedor);
     }
 
     //função que preenche a tabela
@@ -111,6 +113,29 @@ class FornecedorController extends Controller
             'fimDoContrato' => $request->fimDoContrato,
             'observacao' => $request->observacao,
         ]);
+    }
+
+    public function sendNewRowCreatedEmail($fornecedor)
+    {
+        $to_email = 'root@localhost.com';
+        $subject = 'Novo fornecedor cadastrado';
+        $message = "Um novo fornecedor foi cadastrado, essas são as suas informações: \n \n" .
+            "ID: " . $fornecedor->id . "\n" .
+            "Nome Fantasia: " . $fornecedor->nomeFantasia . "\n" .
+            "Razão Social: " . $fornecedor->razaoSocial . "\n" .
+            "CNPJ: " . $fornecedor->cnpj . "\n" .
+            "Telefone: " . $fornecedor->telefone . "\n" .
+            "Celular: " . $fornecedor->celular . "\n" .
+            "Endereço: " . $fornecedor->endereco . "\n" .
+            "E-mail: " . $fornecedor->email . "\n" .
+            "Site: " . $fornecedor->site . "\n" .
+            "Produto: " . $fornecedor->produto . "\n" .
+            "Contrato: " . $fornecedor->contrato . "\n" .
+            "Inicio do contrato: " . $fornecedor->inicioDoContrato . "\n" .
+            "Fim do contrato: " . $fornecedor->fimDoContrato . "\n" .
+            "Observação: " . $fornecedor->observacao . "\n";
+        $headers = 'From: noreply@cadforn.com';
+        mail($to_email, $subject, $message, $headers);
     }
 
     public function HomePage()
