@@ -143,7 +143,7 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
       return false;
     }
 
-    if (this.produto === "") {
+    if (this.responsavel === "") {
       alert("Você deve escolher um responsavel!");
       return false;
     }
@@ -270,10 +270,6 @@ function FillOverlay(providerID) {
 
 
 function SaveEditedProvider(providerID) {
-  if (!window.confirm("Atenção! Isso pode alterar os dados do fornecedor. Deseja continuar?")) {
-    return;
-  }
-
   //Cria um objeto fornecedor com todas as informações contidas nos campos de edição
   let provider = new Provider(
     document.getElementById('nomeFantasia').value,
@@ -296,6 +292,11 @@ function SaveEditedProvider(providerID) {
 
   //Caso todas as informações sejam válidas atualiza a lista de fornecedores e esconde os campos de edição
   if (provider.IsValid()) {
+
+    if (!window.confirm("Atenção! Isso pode alterar os dados do fornecedor. Deseja continuar?")) {
+      return;
+    }
+
     let xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function () {

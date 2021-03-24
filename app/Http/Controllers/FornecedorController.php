@@ -51,23 +51,32 @@ class FornecedorController extends Controller
 
     public function Search()
     {
-        $textToSearch = $_POST['textToSearch'];
         $providersList = Fornecedor::select("*")
-            ->where('nomeFantasia', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('razaoSocial', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('cnpj', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('telefone', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('celular', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('endereco', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('email', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('site', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('produto', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('contrato', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('inicioDoContrato', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('fimDoContrato', 'LIKE', '%' . $textToSearch . '%')
-            ->orWhere('responsavel', 'LIKE', '%' . $textToSearch . '%')
+            ->where('isArchived', 0)
+            ->where(function ($query) {
+                $textToSearch = $_POST['textToSearch'];
+
+                $query
+                    ->where('nomeFantasia', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('razaoSocial', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('cnpj', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('telefone', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('celular', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('endereco', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('email', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('site', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('produto', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('contrato', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('inicioDoContrato', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('fimDoContrato', 'LIKE', '%' . $textToSearch . '%')
+                    ->orWhere('responsavel', 'LIKE', '%' . $textToSearch . '%');
+            })
+
             ->orderBy('id', 'DESC')
             ->get(); //função get de dentro da classe fornecedor - informações do banco de dados//função get de dentro da classe fornecedor - informações do banco de dados
+
+
+
         return $providersList;
     }
 
