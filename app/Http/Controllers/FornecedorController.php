@@ -32,6 +32,7 @@ class FornecedorController extends Controller
             'contrato' => $request->contrato,
             'inicioDoContrato' => $request->inicioDoContrato,
             'fimDoContrato' => $request->fimDoContrato,
+            'responsavel' => $request->responsavel,
             'observacao' => $request->observacao,
             'IsArchived' => $request->IsArchived,
         ]);
@@ -64,6 +65,7 @@ class FornecedorController extends Controller
             ->orWhere('contrato', 'LIKE', '%' . $textToSearch . '%')
             ->orWhere('inicioDoContrato', 'LIKE', '%' . $textToSearch . '%')
             ->orWhere('fimDoContrato', 'LIKE', '%' . $textToSearch . '%')
+            ->orWhere('responsavel', 'LIKE', '%' . $textToSearch . '%')
             ->orderBy('id', 'DESC')
             ->get(); //função get de dentro da classe fornecedor - informações do banco de dados//função get de dentro da classe fornecedor - informações do banco de dados
         return $providersList;
@@ -111,6 +113,7 @@ class FornecedorController extends Controller
             'contrato' => $request->contrato,
             'inicioDoContrato' => $request->inicioDoContrato,
             'fimDoContrato' => $request->fimDoContrato,
+            'responsavel' => $request->responsavel,
             'observacao' => $request->observacao,
         ]);
     }
@@ -133,6 +136,7 @@ class FornecedorController extends Controller
             "Contrato: " . $fornecedor->contrato . "\n" .
             "Inicio do contrato: " . $fornecedor->inicioDoContrato . "\n" .
             "Fim do contrato: " . $fornecedor->fimDoContrato . "\n" .
+            'Responsavel: ' . $fornecedor->responsavel . "\n" .
             "Observação: " . $fornecedor->observacao . "\n";
         $headers = 'From: noreply@cadforn.com';
         mail($to_email, $subject, $message, $headers);

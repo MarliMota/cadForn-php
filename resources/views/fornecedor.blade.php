@@ -136,6 +136,15 @@
             <td> <input type="date" name="fimDoContrato" id="fimDoContrato" placeholder="" autocomplete="off"></td>
           </tr>
           <tr>
+            <th>Responsável</th>
+            <td> <select class="form-select" name="responsavel" id="responsavel" aria-label="Default select example">
+                <option selected>Selecione um responsável</option>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+                <option value="3">Convidado</option>
+              </select></td>
+          </tr>
+          <tr>
             <th>Observação</th>
             <td> <textarea type="text" name="observacao" id="observacao" placeholder="Observação"
                 autocomplete="none"> </textarea> </td>

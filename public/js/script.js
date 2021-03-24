@@ -55,6 +55,7 @@ function SetPageOverlayVisibility(visible) {
     document.getElementById('contrato').value = "";
     document.getElementById('inicioDoContrato').value = "";
     document.getElementById('fimDoContrato').value = "";
+    document.getElementById('responsavel').value = "";
     document.getElementById('observacao').value = "";
     document.getElementById('addProviderButtonBox').style.display = "none";
     document.getElementById('detailsButtonBox').style.display = "none";
@@ -70,7 +71,7 @@ function SetNewProviderScreenVisibility(visible) {
 }
 
 //construtor do objeto Provider - contém todos os atributos que o fornecedor deve ter e o método que verifica se é válido
-function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, email, site, produto, contrato, inicioDoContrato, fimDoContrato, observacao = "") {
+function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, email, site, produto, contrato, inicioDoContrato, fimDoContrato, responsavel, observacao = "") {
   this.nomeFantasia = nomeFantasia;
   this.razaoSocial = razaoSocial;
   this.cnpj = cnpj;
@@ -81,8 +82,9 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
   this.site = site;
   this.produto = produto;
   this.contrato = contrato;
-  this.inicioDoContrato = inicioDoContrato
-  this.fimDoContrato = fimDoContrato
+  this.inicioDoContrato = inicioDoContrato;
+  this.fimDoContrato = fimDoContrato;
+  this.responsavel = responsavel;
   this.observacao = observacao;
   this.IsArchived = 0;
   this.ID = 0;
@@ -141,6 +143,11 @@ function Provider(nomeFantasia, razaoSocial, cnpj, telefone, celular, endereco, 
       return false;
     }
 
+    if (this.produto === "") {
+      alert("Você deve escolher um responsavel!");
+      return false;
+    }
+
     if (this.observacao.length > 255) {
       alert("Você excedeu o limite de 255 caracteres no campo observação!");
       return false;
@@ -166,6 +173,7 @@ function SaveNewProvider() {
     document.getElementById('contrato').value,
     document.getElementById('inicioDoContrato').value,
     document.getElementById('fimDoContrato').value,
+    document.getElementById('responsavel').value,
     document.getElementById('observacao').value,
   );
 
@@ -249,6 +257,7 @@ function FillOverlay(providerID) {
       document.getElementById('contrato').value = selectedProvider.contrato;
       document.getElementById('inicioDoContrato').value = selectedProvider.inicioDoContrato;
       document.getElementById('fimDoContrato').value = selectedProvider.fimDoContrato;
+      document.getElementById('responsavel').value = selectedProvider.responsavel;
       document.getElementById('observacao').value = selectedProvider.observacao;
 
       SetPageOverlayVisibility(true);
@@ -279,6 +288,7 @@ function SaveEditedProvider(providerID) {
     document.getElementById('contrato').value,
     document.getElementById('inicioDoContrato').value,
     document.getElementById('fimDoContrato').value,
+    document.getElementById('responsavel').value,
     document.getElementById('observacao').value
   );
 
@@ -325,6 +335,7 @@ SetReadOnly = function (value) {
   document.getElementById("contrato").readOnly = value;
   document.getElementById('inicioDoContrato').readOnly = value;
   document.getElementById('fimDoContrato').readOnly = value;
+  document.getElementById('responsavel').readOnly = value;
   document.getElementById("observacao").readOnly = value;
 }
 
