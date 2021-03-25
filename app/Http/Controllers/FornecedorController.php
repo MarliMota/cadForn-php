@@ -7,16 +7,14 @@ use App\Fornecedor;
 use GrahamCampbell\ResultType\Result;
 use Mockery\Undefined;
 
-
 //funções crud
 class FornecedorController extends Controller
 {
-    //public $providersList;
 
-    public $currentPage = 0;
-    public $itemsByPage = 4;
+    public $currentPage = 0; //numero da pagina atual
+    public $itemsByPage = 5; //quantidade de fornecedores mostrados por pagina
 
-    //salva os dados do fornecedor
+    //salva os dados do novo fornecedor
     public function Create(Request $request) //request das informações do formulário
     {
         $fornecedor = Fornecedor::create([
@@ -34,27 +32,28 @@ class FornecedorController extends Controller
             'fimDoContrato' => $request->fimDoContrato,
             'responsavel' => $request->responsavel,
             'observacao' => $request->observacao,
-            'IsArchived' => $request->IsArchived,
+            'IsArchived' => $request->IsArchived, //variavel criada para o softdelete
         ]);
 
-        $this->sendNewRowCreatedEmail($fornecedor);
+        $this->sendNewRowCreatedEmail($fornecedor); //envia e-mail com as informações do fornecedor cadastrado
     }
 
-    //função que preenche a tabela
+    //função que preenche a tabela das paginas
     public function ReadAll()
     {
-        $providersList = Fornecedor::select("*")->where('isArchived', 0)
-            ->orderBy('id', 'DESC')
+        $providersList = Fornecedor::select("*")->where('isArchived', 0) //seleciona todos os fornecedores com isArchived = 0, ou seja, fornecedores ativos (não arquivados)
+            ->orderBy('id', 'DESC') //ordena por id de forma decrescente (do mais novo para o mais antigo)
             ->get(); //função get de dentro da classe fornecedor - informações do banco de dados
         return $providersList;
     }
 
+    //função de busca
     public function Search()
     {
         $providersList = Fornecedor::select("*")
-            ->where('isArchived', 0)
-            ->where(function ($query) {
-                $textToSearch = $_POST['textToSearch'];
+            ->where('isArchived', 0) //busca apenas os fornecedores ativos
+            ->where(function ($query) { //query avançada que contem um conjunto de querys
+                $textToSearch = $_POST['textToSearch']; //recebe o texto que foi digitado
 
                 $query
                     ->where('nomeFantasia', 'LIKE', '%' . $textToSearch . '%')
@@ -72,21 +71,19 @@ class FornecedorController extends Controller
                     ->orWhere('responsavel', 'LIKE', '%' . $textToSearch . '%');
             })
 
-            ->orderBy('id', 'DESC')
-            ->get(); //função get de dentro da classe fornecedor - informações do banco de dados//função get de dentro da classe fornecedor - informações do banco de dados
-
-
+            ->orderBy('id', 'DESC') //ordena do mais novo para o mais velho
+            ->get(); //função get de dentro da classe fornecedor - informações do banco de dados
 
         return $providersList;
     }
 
-
+    //função que le um fornecedor pelo id(usada para preencher o overlay para detalhes ou editar)
     public function Read($id)
     {
         return Fornecedor::findOrFail($id); //acessa o banco de dados e encontra um elemento pelo id
     }
 
-    //função para excluir
+    //função para excluir - não está sendo usada, pois é usada a função softdelete
     public function Delete()
     {
         $id = $_POST['id'];
@@ -94,13 +91,14 @@ class FornecedorController extends Controller
         $fornecedor->delete();
     }
 
+    //função que arquiva fornecedor pelo id
     public function SoftDelete()
     {
-        $id = $_POST['id'];
+        $id = $_POST['id']; //pega uma variavel especifica dentro do objeto global POST
         $fornecedor = Fornecedor::findOrFail($id);
 
-        $fornecedor->Update([
-            'IsArchived' => 1,
+        $fornecedor->Update([ //ponteiro que aponta para uma variavel no banco de dados, para que essa variavel seja alterada
+            'IsArchived' => 1, //muda o valor para um, arquivando o fornecedor
         ]);
     }
 
@@ -127,9 +125,10 @@ class FornecedorController extends Controller
         ]);
     }
 
+    //função para envio de e-mail
     public function sendNewRowCreatedEmail($fornecedor)
     {
-        $to_email = 'root@localhost.com';
+        $to_email = 'root@localhost.com'; //email criado e configurado para receber os emails locais - configurado no mercury e recebido no thunderbird
         $subject = 'Novo fornecedor cadastrado';
         $message = "Um novo fornecedor foi cadastrado, essas são as suas informações: \n \n" .
             "ID: " . $fornecedor->id . "\n" .
@@ -148,11 +147,29 @@ class FornecedorController extends Controller
             'Responsavel: ' . $fornecedor->responsavel . "\n" .
             "Observação: " . $fornecedor->observacao . "\n";
         $headers = 'From: noreply@cadforn.com';
-        mail($to_email, $subject, $message, $headers);
+        mail($to_email, $subject, $message, $headers); //função de email
     }
 
+    //retorna a pagina inicial - rotar view fornecedor
     public function HomePage()
     {
         return view('fornecedor', []);
+    }
+
+    public function GetResponsibleList()
+    {
+        $servername = "localhost"; //padrão - server local
+        $database = "crud"; //nome do banco de dados
+        $username = "root"; //padrão - root
+        $password = ""; //senha de conexão com o bd
+
+        //cria a conexão
+        $conexao = mysqli_connect($servername, $username, $password, $database);
+        $sql = "SELECT * FROM responsavel order by nome_responsavel ASC";
+        $result = mysqli_query($conexao, $sql);
+
+        $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $array;
     }
 }

@@ -13,6 +13,8 @@ use App\Http\Controllers\FornecedorController;
 |
 */
 
+//rotas que apontam para as funções, ou seja, o js usa essas rotas para acessar as funções do php(que por sua vez acessam e alteram o banco de dados)
+
 //rota para envio de dados do novo fornecedor
 Route::post('/criar', [FornecedorController::class, 'Create']);
 
@@ -25,13 +27,17 @@ Route::get('/', [FornecedorController::class, 'HomePage']);
 //rota para atualização de página - informada uma página específica
 Route::get('/lertodos', [FornecedorController::class, 'ReadAll']);
 
+//rota de busca
 Route::post('/buscar', [FornecedorController::class, 'Search']);
 
-//rota exclusão
+//rota de atualização
 Route::post('/atualizar', [FornecedorController::class, 'Update']);
 
-//rota exclusão
+//rota de exclusão
 Route::post('/deletar', [FornecedorController::class, 'SoftDelete']);
+
+//Rota para ler a tabela de responsavel
+Route::get('/lerresponsaveis', [FornecedorController::class, 'GetResponsibleList']);
 
 //rota para mudança de lista de fornecedores
 Route::post('/{changeBy}', [FornecedorController::class, 'ChangePageBy']);

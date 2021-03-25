@@ -137,12 +137,10 @@
           </tr>
           <tr>
             <th>Responsável</th>
-            <td> <select class="form-select" name="responsavel" id="responsavel" aria-label="Default select example">
-                <option selected>Selecione um responsável</option>
-                <option value="1">Administrador</option>
-                <option value="2">Usuario</option>
-                <option value="3">Convidado</option>
-              </select></td>
+            <td>
+              <select class="form-select" name="responsavel" id="responsavel" aria-label="Default select example">
+              </select>
+            </td>
           </tr>
           <tr>
             <th>Observação</th>

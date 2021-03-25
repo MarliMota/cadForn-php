@@ -9,13 +9,12 @@
 //document.getElementById("pageOverlay") //seleciona um elemento do html
 let pageOverlay = document.getElementById("pageOverlay"); //salva o elemento do html em uma variável
 
-let providersTable = document.getElementById("providersTable"); //onde a tablea vai ser desenhada no html
+let providersTable = document.getElementById("providersTable"); //onde a tabela vai ser desenhada no html
 
-let providersForm = document.getElementById("providersForm");
 
-var xmlhttpSearch;
+var xmlhttpSearch;//variavel criada para a busca(armazena a request de busca) - usada globalmente para ser abortada 
 
-let itemsByPage = 2;
+let itemsByPage = 5;
 let pageNumber = 0;
 let numberOfPages = 1;
 
@@ -34,8 +33,8 @@ let numberOfPages = 1;
 // );
 
 //providersList.push(defaultProvider);
-
-ReadAll();
+GetResponsibleList();
+ReadAll();//atualiza a página assim que é aberta pela primeira vez
 
 //função que mostra/esconde a tela de Overlay
 function SetPageOverlayVisibility(visible) {
@@ -182,20 +181,20 @@ function SaveNewProvider() {
     // providersForm.action = "/criar";
     // providersForm.method = "POST";
     // providersForm.submit();
-    let xmlhttp = new XMLHttpRequest();
+    let xmlhttp = new XMLHttpRequest();//variavel local, que armazena um objeto que possui propriedades e funções 
     xmlhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        Search(document.getElementById("searchbox").value);
+      if (this.readyState == 4 && this.status == 200) {//verifica se está tudo certo com a requisição
+        Search(document.getElementById("searchbox").value);//atualiza a lista na tela
         SetPageOverlayVisibility(false);
       }
     }
 
-    xmlhttp.open('POST', '/criar', true);
+    xmlhttp.open('POST', '/criar', true);//abre uma solicitação do tipo post, no /criar, de forma assincrona
     xmlhttp.setRequestHeader("Accept", "application/json");
     //    xmlhttp.setRequestHeader('x-csrf-token', getCSRFToken());
     xmlhttp.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 
-    xmlhttp.send(JSON.stringify(currentProvider));
+    xmlhttp.send(JSON.stringify(currentProvider));//envia a informação do tipo Json, mas em forma de texto
   }
 }
 
@@ -205,8 +204,7 @@ function DeleteProvider(providerID) {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
-        //verifica se todos os fornecedores acabaram, em caso positivo, volta uma página
-        Search(document.getElementById("searchbox").value);
+        Search(document.getElementById("searchbox").value);//atualiza a pagina
       }
     }
 
@@ -373,7 +371,7 @@ function ReadAll(providersList = null) {
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       if (providersList == null) {
-        providersList = JSON.parse(this.responseText); //função get de dentro da classe fornecedor - informações do banco de dados
+        providersList = JSON.parse(this.responseText);
       }
 
       data = ""; //variavel que armeza o código html gerado no js e que no futuro será enviado para dentro do elemento providersTable
@@ -409,6 +407,10 @@ function ReadAll(providersList = null) {
           data += '</tr>';
         }
       }
+
+
+
+
       return document.getElementById("providersTable").innerHTML = data;
     }
   }
@@ -431,7 +433,7 @@ function Search(textToSearch) {
 
   xmlhttpSearch.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      return ReadAll(JSON.parse(this.responseText)); //função get de dentro da classe fornecedor - informações do banco de dados
+      return ReadAll(JSON.parse(this.responseText));
     }
   }
 
@@ -442,4 +444,23 @@ function Search(textToSearch) {
   }
 }
 
+function GetResponsibleList() {
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      select = document.getElementById("responsavel");
+      options = JSON.parse(this.responseText);
+
+      for (var i = 0; i < options.length; i++) {
+        var opt = document.createElement('option');
+        opt.value = options[i].id;
+        opt.innerHTML = options[i].nome_responsavel;
+        select.appendChild(opt);
+      }
+    }
+  }
+
+  xmlhttp.open("GET", "/lerresponsaveis", true);
+  xmlhttp.send();
+}
 
