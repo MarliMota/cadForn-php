@@ -397,13 +397,13 @@ function ReadAll(providersList = null) {
           }
           //construção da tabela html
           data += '<tr>';
-          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].nomeFantasia + '</td>';
-          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].razaoSocial + '</td>';
-          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].cnpj + '</td>';
-          data += '<td style="width:9%">' + providersList[pageNumber * itemsByPage + i].telefone + '</td>';
-          data += '<td style="width:9%"> <Button onclick="ShowProviderDetails(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn" id="details-btn"><i class="fa fa-ellipsis-h"></i> Detalhes</Button> </td>';
-          data += '<td style="width:9%"> <Button onclick="EditProvider (' + providersList[pageNumber * itemsByPage + i].id + ')"  class="btn" id="edit-btn"><i class="fa fa-edit"></i> Editar</Button> </td>';
-          data += '<td style="width:9%"> <button onclick="DeleteProvider(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete"><i class="fa fa-times"></i></button> </td>';
+          data += '<td>' + providersList[pageNumber * itemsByPage + i].nomeFantasia + '</td>';
+          data += '<td>' + providersList[pageNumber * itemsByPage + i].razaoSocial + '</td>';
+          data += '<td>' + providersList[pageNumber * itemsByPage + i].cnpj + '</td>';
+          data += '<td>' + providersList[pageNumber * itemsByPage + i].telefone + '</td>';
+          data += '<td> <Button onclick="ShowProviderDetails(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete" id="details-btn"><i class="fa fa-eye"></i></Button> </td>';
+          data += '<td> <Button onclick="EditProvider (' + providersList[pageNumber * itemsByPage + i].id + ')"  class="btn-delete" id="edit-btn"><i class="fa fa-edit"></i></Button> </td>';
+          data += '<td> <button onclick="DeleteProvider(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete"><i class="fa fa-trash"></i></button> </td>';
           data += '</tr>';
         }
       }

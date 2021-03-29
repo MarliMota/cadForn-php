@@ -45,7 +45,7 @@
       <h2>Fornecedores</h2>
       <div class="titleButton">
         <button class="btn" onclick="SetNewProviderScreenVisibility(true)"><i class="fa fa-plus"></i> Adicionar</button>
-        <input id="searchbox" oninput="Search(this.value)" placeholder="Buscar">
+        <input autocomplete="off" id="searchbox" oninput="Search(this.value)" placeholder="Buscar">
       </div>
     </section>
     <section class="providers">
