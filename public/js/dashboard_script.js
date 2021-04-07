@@ -401,16 +401,13 @@ function ReadAll(providersList = null) {
           data += '<td>' + providersList[pageNumber * itemsByPage + i].razaoSocial + '</td>';
           data += '<td>' + providersList[pageNumber * itemsByPage + i].cnpj + '</td>';
           data += '<td>' + providersList[pageNumber * itemsByPage + i].telefone + '</td>';
-          data += '<td> <Button onclick="ShowProviderDetails(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete" id="details-btn"><i class="fa fa-eye"></i></Button> </td>';
-          data += '<td> <Button onclick="EditProvider (' + providersList[pageNumber * itemsByPage + i].id + ')"  class="btn-delete" id="edit-btn"><i class="fa fa-edit"></i></Button> </td>';
-          data += '<td> <button onclick="DeleteProvider(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-delete"><i class="fa fa-trash"></i></button> </td>';
+          data += '<td>' + providersList[pageNumber * itemsByPage + i].celular + '</td>';
+          data += '<td> <div class = "btn-action-container"> <Button onclick="ShowProviderDetails(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-action" id="details-btn"><i class="fa fa-eye"></i></Button>';
+          data += '<Button onclick="EditProvider (' + providersList[pageNumber * itemsByPage + i].id + ')"  class="btn-action" id="edit-btn"><i class="fa fa-edit"></i></Button>';
+          data += '<button onclick="DeleteProvider(' + providersList[pageNumber * itemsByPage + i].id + ')" type="button" class="btn-action"><i class="fa fa-trash"></i></button></div> </td>';
           data += '</tr>';
         }
       }
-
-
-
-
       return document.getElementById("providersTable").innerHTML = data;
     }
   }
@@ -462,5 +459,18 @@ function GetResponsibleList() {
 
   xmlhttp.open("GET", "/lerresponsaveis", true);
   xmlhttp.send();
+}
+
+function Logout() {
+  let xmlhttp = new XMLHttpRequest();//formulário de requisição
+  xmlhttp.onreadystatechange = function () {//acontece quando o status da requisição muda
+    if (this.readyState == 4 && this.status == 200) {//verifica se o status da requisição é concluído e aprovado
+      alert("Usuário desconectado com sucesso!");
+      window.location.pathname = "/";
+    }
+  }
+  xmlhttp.open("POST", "/sair", true);//preenche o formulário de requisição(escolhe o tipo de formulário)
+  //xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xmlhttp.send();//entrega do formulário de requisição
 }
 

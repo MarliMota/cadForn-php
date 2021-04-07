@@ -6,14 +6,11 @@ use Illuminate\Http\Request;
 use App\Fornecedor;
 use GrahamCampbell\ResultType\Result;
 use Mockery\Undefined;
+use mysqli;
 
 //funções crud
 class FornecedorController extends Controller
 {
-
-    public $currentPage = 0; //numero da pagina atual
-    public $itemsByPage = 5; //quantidade de fornecedores mostrados por pagina
-
     //salva os dados do novo fornecedor
     public function Create(Request $request) //request das informações do formulário
     {
@@ -150,10 +147,16 @@ class FornecedorController extends Controller
         mail($to_email, $subject, $message, $headers); //função de email
     }
 
-    //retorna a pagina inicial - rotar view fornecedor
+    //retorna a pagina inicial - rota view login
     public function HomePage()
     {
-        return view('fornecedor', []);
+        return view('login', []);
+    }
+
+    //retorna a pagina inicial - rota view fornecedor
+    public function DashBoard()
+    {
+        return view('dashboard', []);
     }
 
     public function GetResponsibleList()
@@ -171,5 +174,83 @@ class FornecedorController extends Controller
         $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         return $array;
+    }
+
+    public function ValidateLogin()
+    {
+        include 'password.php';
+
+        $servername = "localhost"; //padrão - server local
+        $database = "crud"; //nome do banco de dados
+        $username = "root"; //padrão - root
+        $password = ""; //senha de conexão com o bd
+
+        //cria a conexão
+        $conexao = mysqli_connect($servername, $username, $password, $database);
+
+        $usuario = $_POST['usuario'];
+        $senha_usuario = $_POST['senha'];
+
+        $sql = "SELECT user_name, password FROM users WHERE user_name = '$usuario'";
+        $buscar = mysqli_query($conexao, $sql);
+
+        $total = mysqli_num_rows($buscar);
+
+        while ($array = mysqli_fetch_array($buscar)) {
+            $senha = $array['password'];
+
+            $senhaDecodificada = sha1($senha_usuario);
+            if ($total > 0) {
+                if ($senhaDecodificada == $senha) {
+                    session_start();
+                    $_SESSION['usuario'] = $usuario;
+                    //header('Location: /paineldecontrole');
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        }
+        return 2;
+    }
+
+    public function RegisterLogin()
+    {
+        include 'password.php';
+        $servername = "localhost"; //padrão - server local
+        $database = "crud"; //nome do banco de dados
+        $username = "root"; //padrão - root
+        $password = ""; //senha de conexão com o bd
+
+        //cria a conexão
+        $conexao = mysqli_connect($servername, $username, $password, $database);
+
+        $user_name = $_POST['user_name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $sql = "INSERT INTO users (user_name, email, password) values ('$user_name', '$email', sha1('$password'))";
+
+        $sql2 = "SELECT user_name FROM users WHERE user_name = '$user_name'";
+        $buscar = mysqli_query($conexao, $sql2);
+
+        $total = mysqli_num_rows($buscar);
+
+        if ($total > 0) {
+            return 0;
+        }
+
+        mysqli_query($conexao, $sql);
+        return 1;
+    }
+
+    public function Logout()
+    {
+        // remove all session variables
+        session_unset();
+        // destroy the session
+        //session_destroy();
+        //header('Location: login.blade.php');
+        return true;
     }
 }

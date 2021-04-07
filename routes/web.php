@@ -21,7 +21,7 @@ Route::post('/criar', [FornecedorController::class, 'Create']);
 //rota detalhes
 Route::get('/ler/{id}', [FornecedorController::class, 'Read']);
 
-//rota para atualização de página - preenche a tabela
+//rota para o login
 Route::get('/', [FornecedorController::class, 'HomePage']);
 
 //rota para atualização de página - informada uma página específica
@@ -39,5 +39,14 @@ Route::post('/deletar', [FornecedorController::class, 'SoftDelete']);
 //Rota para ler a tabela de responsavel
 Route::get('/lerresponsaveis', [FornecedorController::class, 'GetResponsibleList']);
 
-//rota para mudança de lista de fornecedores
-Route::post('/{changeBy}', [FornecedorController::class, 'ChangePageBy']);
+//rota atualização de página - preenche a tabela
+Route::get('/paineldecontrole', [FornecedorController::class, 'Dashboard'])->middleware('auth');
+
+//rota de validação de login
+Route::post('/validarlogin', [FornecedorController::class, 'ValidateLogin']);
+
+//cadastro de novo usuario
+Route::post('/cadastrarusuario', [FornecedorController::class, 'RegisterLogin']);
+
+//rota para sair e encerrar sessao
+Route::post('/sair', [FornecedorController::class, 'Logout']);
